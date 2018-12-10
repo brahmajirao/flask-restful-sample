@@ -1,12 +1,11 @@
 import os
 from flask import Flask
-from flask_jwt import JWT
+from flask_jwt_extended import JWTManager
 from flask_restful import Api
 
 from resources.item import Item, Items
-from security import authenticate, identity
 from resources.store import Store, StoreList
-from resources.user import UserRegister, User
+from resources.user import UserRegister, User, UserLogin
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", 'mysql+pymysql://root:@localhost/rest_api')
@@ -15,9 +14,10 @@ app.config['PROPAGATE_EXCEPTIONS'] = False
 app.secret_key = "mySecretKey"
 api = Api(app)
 
-jwt = JWT(app, authenticate, identity)
+jwt = JWTManager(app)
 
 
+api.add_resource(UserLogin, '/login')
 api.add_resource(UserRegister, '/register')
 api.add_resource(User, '/user/<int:user_id>')
 api.add_resource(Item, '/item/<string:name>')
