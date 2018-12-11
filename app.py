@@ -16,6 +16,12 @@ api = Api(app)
 
 jwt = JWTManager(app)
 
+@jwt.user_claims_loader
+def add_claims_to_jwt(identity):
+    if identity==1: #Instead of hard coding, this should get from db
+        return {"is_admin": True}
+    return {"is_admin": False}
+
 
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserRegister, '/register')
