@@ -6,11 +6,14 @@ from flask_restful import Api
 from resources.item import Item, Items
 from resources.store import Store, StoreList
 from resources.user import UserRegister, User, UserLogin, TokenRefresh
+from blacklist import BLACKLIST
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", 'mysql+pymysql://root:@localhost/rest_api')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = False
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 app.secret_key = "mySecretKey"
 api = Api(app)
 
@@ -64,6 +67,11 @@ def revoked_token_callback():
         "descritpion": "The token has been revoked.",
         "error": "token_revoked"
     }), 401
+
+
+@jwt.token_in_blacklist_loader
+def check_if_token_in_blacklist(decrypted_token):
+    return decrypted_token["identity"] in BLACKLIST
 
 
 api.add_resource(UserLogin, '/login')
