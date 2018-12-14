@@ -3,10 +3,14 @@ from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
     get_jwt_identity,
-    jwt_refresh_token_required
+    jwt_refresh_token_required,
+    get_raw_jwt,
+    jwt_required
 )
+from blacklist import BLACKLIST
 from werkzeug.security import safe_str_cmp
 from models.user import UserModel
+
 
 class UserRegister(Resource):
 
@@ -26,6 +30,7 @@ class UserRegister(Resource):
             return {"id": register.id}, 201
         else:
             return {"id": None}
+
 
 class User(Resource):
 
@@ -67,6 +72,14 @@ class UserLogin(Resource):
             }, 200
 
         return {"message": "Invalid credentials"}, 401
+
+
+class Logout(Resource):
+    @jwt_required
+    def post(self):
+        jti = get_raw_jwt() #jti is JWT ID, a unique identifier for a JWT
+        BLACKLIST.add(jti)
+        return {'message': 'successfully logged out'}
 
 class TokenRefresh(Resource):
     @jwt_refresh_token_required

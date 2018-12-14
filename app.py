@@ -5,7 +5,7 @@ from flask_restful import Api
 
 from resources.item import Item, Items
 from resources.store import Store, StoreList
-from resources.user import UserRegister, User, UserLogin, TokenRefresh
+from resources.user import UserRegister, User, UserLogin, TokenRefresh, Logout
 from blacklist import BLACKLIST
 
 app = Flask(__name__)
@@ -71,7 +71,7 @@ def revoked_token_callback():
 
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
-    return decrypted_token["identity"] in BLACKLIST
+    return decrypted_token["jti"] in BLACKLIST
 
 
 api.add_resource(UserLogin, '/login')
@@ -82,6 +82,7 @@ api.add_resource(Items, '/items')
 api.add_resource(Store, '/store/<string:name>')
 api.add_resource(StoreList, '/stores')
 api.add_resource(TokenRefresh, '/refreshtoken')
+api.add_resource(Logout, 'logout')
 
 if __name__ == "__main__":
     from db import db
