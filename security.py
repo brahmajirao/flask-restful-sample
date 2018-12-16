@@ -1,5 +1,6 @@
 from models.user import UserModel
 
+
 def authenticate(username, password):
     user = UserModel.find_by_username(username)
     if user is not None and user.password == password:
