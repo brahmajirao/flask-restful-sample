@@ -8,7 +8,7 @@ class UserModel(db.Model):
     password = db.Column(db.String(100))
     name = db.Column(db.String(100))
 
-    def __init__(self, username, password, fullname):
+    def __init__(self, username: str, password: str, fullname: str):
         self.username = username
         self.password = password
         self.name = fullname
@@ -20,17 +20,17 @@ class UserModel(db.Model):
         }
 
     @classmethod
-    def find_by_username(cls, username):
+    def find_by_username(cls, username: str):
         return cls.query.filter_by(username=username).first()
 
     @classmethod
-    def find_by_id(cls, userid):
+    def find_by_id(cls, userid: int):
         return cls.query.filter_by(id=userid).first()
 
-    def register(self):
+    def register(self) -> None:
         db.session.add(self)
         db.session.commit()
 
-    def delete_from_db(self):
+    def delete_from_db(self) ->None:
         db.session.delete(self)
         db.session.commit()

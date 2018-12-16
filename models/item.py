@@ -10,12 +10,12 @@ class ItemModel(db.Model):
     store_id = db.Column(db.Integer, db.ForeignKey('stores.id'))
     store = db.relationship('StoreModel')
 
-    def __init__(self, name, price, store_id):
+    def __init__(self, name: str, price: float, store_id: int):
         self.name = name
         self.price = price
         self.store_id = store_id
 
-    def json(self):
+    def json(self) -> dict:
         return {
             "id": self.id,
             "name": self.name,
@@ -24,17 +24,17 @@ class ItemModel(db.Model):
         }
 
     @classmethod
-    def find_by_name(cls, name):
+    def find_by_name(cls, name: str):
         return cls.query.filter_by(name = name).first()
 
-    def save_item(self):
+    def save_item(self) -> None:
         db.session.add(self)
         db.session.commit()
 
-    def delete_item(self):
+    def delete_item(self) -> None:
         db.session.delete(self)
         db.session.commit()
 
     @classmethod
-    def find_all(cls):
+    def find_all(cls) ->list:
         return cls.query.all()
