@@ -93,7 +93,7 @@ api.add_resource(Items, "/items")
 api.add_resource(Store, "/store/<string:name>")
 api.add_resource(StoreList, "/stores")
 api.add_resource(TokenRefresh, "/refreshtoken")
-api.add_resource(Logout, "logout")
+api.add_resource(Logout, "/logout")
 
 if __name__ == "__main__":
     from db import db

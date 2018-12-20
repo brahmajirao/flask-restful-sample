@@ -11,13 +11,10 @@ class UserModel(db.Model):
     password = db.Column(db.String(100))
     name = db.Column(db.String(100))
 
-    def __init__(self, username: str, password: str, fullname: str):
+    def __init__(self, username: str, password: str, name: str):
         self.username = username
         self.password = password
-        self.name = fullname
-
-    def json(self) -> UserJSON:
-        return {"id": self.id, "username": self.username}
+        self.name = name
 
     @classmethod
     def find_by_username(cls, username: str) -> "UserModel":
